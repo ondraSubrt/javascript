@@ -373,7 +373,8 @@ var knownReferrers = {
         'medium': isMediumSet(),
         'srcSegment': '008',
         'segmentCode': 'c',
-        'source': isSourceSet()
+        'source': isSourceSet(),
+        'campaign': isCampaignSet()
     },
     'forest': {
         'name': 'forest',
