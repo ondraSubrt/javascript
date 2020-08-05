@@ -367,6 +367,7 @@ var knownReferrers = {
         'srcSegment': '007',
         'segmentCode': 'a',
         'source': isSourceSet()
+        'campaign': isCampaignSet()
     },
     'microsoft': {
         'name': 'microsoft',
