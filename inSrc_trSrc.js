@@ -341,7 +341,7 @@ var knownReferrers = {
         'campaign': isCampaignSet()
     },
     'affiliate': {
-        'name': 'affiliate',
+        'name': isSourceSet(),
         'medium': 'affiliate',
         'srcSegment': '002',
         'segmentCode': affiliateSegmentCode(),
@@ -366,7 +366,7 @@ var knownReferrers = {
         'medium': isMediumSet(),
         'srcSegment': '007',
         'segmentCode': 'a',
-        'source': isSourceSet()
+        'source': isSourceSet(),
         'campaign': isCampaignSet()
     },
     'microsoft': {
