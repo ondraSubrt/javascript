@@ -362,7 +362,7 @@ var knownReferrers = {
         'campaign': isCampaignSet()
     },
     'customUTMs': {
-        'name': 'customUTMs',
+        'name': isSourceSet(),
         'medium': isMediumSet(),
         'srcSegment': '007',
         'segmentCode': 'a',
