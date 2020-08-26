@@ -150,7 +150,9 @@ function createCookie_(name, value, expiration, path, domain) {
 }
 
 function setCookieExpiration_(){
-  if(document.location.href.includes('secureline') || document.location.href.includes('vpn') || document.location.href.includes('hidemyass') ){ // if any VPN then 72 hours
+  if(document.location.href.includes('secureline') || document.location.href.includes('vpn') || document.location.href.includes('hidemyass')){ // if any VPN then 72 hours
+    return 72;
+  } else if (document.location.href.includes('omni')){
     return 72;
   } else {
     return 2;
@@ -168,7 +170,7 @@ function includes(str,arr) {
 
 function getPageId_(){
   if (dataLayer){
-    for (i = 0; i < dataLayer.length; i++){
+    for (var i = 0; i < dataLayer.length; i++){
       if (dataLayer[i].hasOwnProperty("pageId")){
         return dataLayer[i].pageId;
       }
