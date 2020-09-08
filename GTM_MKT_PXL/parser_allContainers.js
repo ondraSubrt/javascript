@@ -207,7 +207,7 @@ return mktTags;
 
 const fs = require('fs'),
     path = require('path'),
-    gtm_ids = ["GTM-PZ48F8", "GTM-PQL2XC"]; // "GTM-PZ48F8", "GTM-PQL2XC", "GTM-P4J5LNG" add to array
+    gtm_ids = ["GTM-PZ48F8", "GTM-PQL2XC", "GTM-P4J5LNG"]; // "GTM-PZ48F8", "GTM-PQL2XC", "GTM-P4J5LNG" add to array
     (async () => {
     let allMarketingTags = [];
     for (let gtms = 0; gtms < gtm_ids.length; gtms++){
