@@ -207,7 +207,7 @@ return mktTags;
 
 const fs = require('fs'),
     path = require('path'),
-    gtm_ids = ["GTM-PZ48F8", "GTM-PQL2XC", "GTM-P4J5LNG"]; // "GTM-PZ48F8", "GTM-PQL2XC", "GTM-P4J5LNG" add to array
+    gtm_ids = ["GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S"]; // GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S add to array
     (async () => {
     let allMarketingTags = [];
     for (let gtms = 0; gtms < gtm_ids.length; gtms++){
