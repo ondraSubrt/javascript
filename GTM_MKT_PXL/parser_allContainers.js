@@ -1,13 +1,13 @@
-function picker(json_file, gtms){
+function picker(json_file, publicId, containerName){
     var mktTags = [];
     var mkt_types = ['awct', 'flc', 'bzi', 'qpx', 'uslt', 'sp', 'gclidw', 'img', 'abtGeneric', 'ta', 'adm',
-    'asp', 'awc', 'awj', 'baut', '	bb', 'bsa', 'cts', 'csm', 'mpm', 'mpr', 'cegg', 'crto',
+    'asp', 'awc', 'awj', 'baut', 'bb', 'bsa', 'cts', 'csm', 'mpm', 'mpr', 'cegg', 'crto',
     'dstag', 'fls', 'm6d', 'ela', 'gcs', 'ts', 'hjtc', 'infinity', 'sca', 'k50Init',
     'll', 'ljs', 'ms', 'messagemate', 'mf', 'ndcr', 'nudge', 'okt', 'omc', 'pa', 'pc',
     'pntr', 'placedPixel', 'pijs', 'qcm', 'fxm', 'scjs', 'scp', 'sfc', 'sfl', 'sfr', 'svw',
     'shareaholic', 'tdlc', 'tdsc', 'tc', 'tdc', 'twitter_website_tag', 'uspt', 'vei', 'veip',
     'vdc', 'xpsh', 'yieldify', 'zone', 'html', 'cvt_1039428_1453', 'cvt_1039428_1500'];
-    var tagArray = json_file.containerVersion.tag;
+    var tagArray = json_file.tag; // upravit cestu na exportované kontejnery
     var pushObj = {};
     for (var i = 0; i < tagArray.length; i++){
         for (var j = 0; j < mkt_types.length; j++){
@@ -15,7 +15,8 @@ function picker(json_file, gtms){
                 if (tagArray[i].type == "html" && tagArray[i].name.match(/facebook|yahoo|pixel|capterra|sklik|A8FLY|Bing|Demandbase|Dstillery|Optimizely|Outbrain|Sales Force|Set Cookie|Softonic|Spiceworks|Twitter|Yandex/gi)){
                     //console.log(tagArray[i].name);   
                     var htmlObj = {
-                        'gtm': gtm_ids[gtms],
+                        'gtm': publicId,
+                        'publicId': containerName,
                         'name': tagArray[i].name,
                         'type': "html",
                         'parameters': {
@@ -36,7 +37,8 @@ function picker(json_file, gtms){
                             }  
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "ads",
                             'parameters': {
@@ -54,7 +56,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "ads",
                             'parameters': {
@@ -71,7 +74,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "linkedIn",
                             'parameters': {
@@ -94,7 +98,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "DCM",
                             'parameters': {
@@ -113,7 +118,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "image",
                             'parameters': {
@@ -130,7 +136,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "upsellit",
                             'parameters': {
@@ -147,7 +154,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "quora",
                             'parameters': {
@@ -164,7 +172,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "reddit",
                             'parameters': {
@@ -181,7 +190,8 @@ function picker(json_file, gtms){
                             }
                         } 
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': "facebook",
                             'parameters': {
@@ -192,7 +202,8 @@ function picker(json_file, gtms){
                     /* END cvt_1039428_1500 - facebook tags ---------------------------------------------- */   
                     } else {
                         pushObj = {
-                            'gtm': gtm_ids[gtms],
+                            'gtm': publicId,
+                            'publicId': containerName,
                             'name': tagArray[i].name,
                             'type': tagArray[i].type
                         }
@@ -205,18 +216,59 @@ function picker(json_file, gtms){
 return mktTags;
 };
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 const fs = require('fs'),
     path = require('path'),
-    gtm_ids = ["GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S"]; // GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S add to array
-    (async () => {
-    let allMarketingTags = [];
-    for (let gtms = 0; gtms < gtm_ids.length; gtms++){
-        let jsonString = await fs.promises.readFile(path.join(__dirname, gtm_ids[gtms] + '.json'), 'utf-8'),
-		json = JSON.parse(jsonString);
-        // Tady si dělej co chceš
-        allMarketingTags = allMarketingTags.concat(picker(json, gtms));
-        console.log(allMarketingTags.length);
+    {google} = require('googleapis'),
+    gtm_ids = ["GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S"], // GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S add to array
+    auth = new google.auth.GoogleAuth({
+        keyFile: './credentials.json',
+        scopes: ['https://www.googleapis.com/auth/tagmanager.edit.containers', 'https://www.googleapis.com/auth/tagmanager.readonly']
+    }),
+    gtm = google.tagmanager({
+        version: 'v2',
+        auth
+    });
+
+(async () => {
+    let gtmContainersJSON = await gtm.accounts.containers.list({
+        parent: 'accounts/46794940'
+    });
+    let gtmContainerIds = [];
+    for (var k = 0; k < gtmContainersJSON.data.container.length; k++) {
         
+            gtmContainerIds.push({
+                'accountId': gtmContainersJSON.data.container[k].accountId,
+                'containerId': gtmContainersJSON.data.container[k].containerId,
+                'publicId': gtmContainersJSON.data.container[k].publicId,
+                'containerName': gtmContainersJSON.data.container[k].name
+            });    
+            sleep(1000);
+            if (gtm_ids.includes(gtmContainerIds[k].publicId)){
+                try {
+                let gtmLiveContainer = await gtm.accounts.containers.versions.live({
+                    parent: 'accounts/' + gtmContainerIds[k].accountId + '/containers/' + gtmContainerIds[k].containerId
+                }); 
+                await fs.promises.writeFile(path.join(__dirname, gtmContainerIds[k].publicId + '.json'),JSON.stringify(gtmLiveContainer.data, null, '\t'))
+                } catch (error) {
+                    console.error(error);
+                }
+        }    
+    }
+    
+    console.log(gtmContainerIds);
+
+    let allMarketingTags = [];
+    for (let gtms = 0; gtms < gtmContainerIds.length; gtms++){
+        if (gtm_ids.includes(gtmContainerIds[gtms].publicId)){
+            let jsonString = await fs.promises.readFile(path.join(__dirname, gtmContainerIds[gtms].publicId + '.json'), 'utf-8'),
+            json = JSON.parse(jsonString);
+            allMarketingTags = allMarketingTags.concat(picker(json, gtmContainerIds[gtms].publicId, gtmContainerIds[gtms].containerName));
+            console.log(allMarketingTags.length);
+        }
     }  
     var out = JSON.stringify(allMarketingTags);
     // writefile.js
