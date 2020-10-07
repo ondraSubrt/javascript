@@ -66,6 +66,24 @@ function picker(json_file, publicId, containerName){
                         }  
                     mktTags.push(pushObj)   
                     /* END sp tags ---------------------------------------------- */   
+                    /* START baut tags ---------------------------------------------- */
+                    } else if (tagArray[i].type == "baut"){
+                        for (var k = 0; k < tagArray[i].parameter.length; k++){
+                            if (tagArray[i].parameter[k].key == "tagId"){
+                                var tagID = tagArray[i].parameter[k].value;
+                            }
+                        } 
+                        pushObj = {
+                            'gtm': publicId,
+                            'publicId': containerName,
+                            'name': tagArray[i].name,
+                            'type': "bing",
+                            'parameters': {
+                                'tagId': tagID
+                            } 
+                        }  
+                    mktTags.push(pushObj)   
+                    /* END baut tags ---------------------------------------------- */   
                     /* START bzi tags ---------------------------------------------- */
                     } else if (tagArray[i].type == "bzi"){
                         for (var k = 0; k < tagArray[i].parameter.length; k++){
@@ -223,7 +241,10 @@ function sleep(ms) {
 const fs = require('fs'),
     path = require('path'),
     {google} = require('googleapis'),
-    gtm_ids = ["GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S"], // GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S add to array
+    gtm_ids = ["GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", 
+    "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", 
+    "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", 
+    "GTM-PMT5LP4", "GTM-W4S4Q6S"], // GTM-596DMHZ", "GTM-KVL44ZQ", "GTM-NRXZHWS", "GTM-PQL2XC", "GTM-W4ZLWTS", "GTM-K53WCHZ", "GTM-N4XFCLC", "GTM-P4J5LNG", "GTM-PZ48F8", "GTM-WJ6HXT2", "GTM-K6Z7XWM", "GTM-N82JSCH", "GTM-PLLVGVQ", "GTM-T4D4D4X", "GTM-WZLVDCV", "GTM-KDR423C", "GTM-NND769W", "GTM-PMT5LP4", "GTM-W4S4Q6S add to array
     auth = new google.auth.GoogleAuth({
         keyFile: './credentials.json',
         scopes: ['https://www.googleapis.com/auth/tagmanager.edit.containers', 'https://www.googleapis.com/auth/tagmanager.readonly']
