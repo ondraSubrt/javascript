@@ -1,0 +1,272 @@
+.sidebar {
+    top: 0;
+    right: 0;    
+    position: fixed;
+    float: right;
+    width: 600px;
+    align-items: flex-start;
+    justify-content: center;
+    background: #2d364c;
+    height:100%;
+    z-index: 10000;
+    overflow: auto;
+}
+.sidebar-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 15px 15px 15px;
+    padding: 15px 15px 15px 25px;
+    background-color: #353f59;
+    box-shadow: -5px -5px 20px 0 rgba(30, 39, 61, 0.55);
+    border-radius: 5px;
+}
+
+.sidebar-div h3 {
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+}
+
+.has-attribute {
+    font-size: 14px;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    margin: 0px 5px 3px 5px;
+    line-height: 1.2;
+    color: white;
+    overflow-wrap: break-word;
+}
+
+.no-attribute {
+    font-size: 14px;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    margin: 0px 5px 3px 5px;
+    line-height: 1.2;
+    color: red;
+}
+
+.has-attribute-no-value {
+    font-size: 14px;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    margin: 0px 5px 3px 5px;
+    line-height: 1.2;
+    color: orange;
+}
+
+#dataLayerValues {
+    margin-top: 1rem;
+
+}
+
+.button-label-download {
+    font-weight: bold;
+    display: block;
+    background: #586ba4;
+    width: 70%;
+    margin: 5px auto;
+    padding: 1rem;
+    color: white;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.button-label-download button {
+    font-weight: bold;
+    display: contents;
+    background: #586ba4;
+    color: white;
+    text-align: center;
+}
+
+.button-label-buy {
+    font-weight: bold;
+    display: block;
+    background: #c25b5f;
+    width: 70%;
+    margin: 5px auto;
+    padding: 1rem;
+    color: white;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.button-label-buy button {
+    font-weight: bold;
+    display: contents;
+    background: #c25b5f;
+    color: white;
+    text-align: center;
+}
+
+.link-to-button-label {
+    background-color: #00855c;
+    margin: 10px 10px -3px 0px;
+    width: 30%;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    align-self: flex-end;
+    color: white;
+    border: none;
+}
+
+.link-to-button-label button {
+    color: white;
+    background: transparent;
+    border: none;
+}
+
+.not-send-to-ga{
+    background: #da5552;
+    padding: 10px 15px 10px 15px;
+    border-radius: 5px;
+    max-width: fit-content;
+    color: white;
+}
+
+.menu-table {
+    display: flex;
+    vertical-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 15px 15px 15px;
+    padding: 15px 15px 15px 25px;
+    background-color: #353f59;
+    box-shadow: -0.5rem -0.5rem 3rem 0 rgba(30, 39, 61, 0.55);
+    border-radius: 0.2rem;
+    text-align: center;
+
+  }
+
+  .menu-table button {
+    color: white;
+    width: 100%;
+    border: none;
+    background: transparent;
+  }
+
+  .menu-table div {
+    background-color: #00855c;
+    border-radius: 0.2rem;
+    margin: 0.2rem;
+    padding: 0.6rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .hide-non-visible {
+    display: none;
+  }
+
+  .more-options {
+    background: transparent !important;
+    text-align: left;
+    color: white;
+  }
+
+  .more-options input {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 4px;
+    right: 9px;
+  }
+
+  .has-attribute-dl {
+    font-size: 14px;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    margin: 0rem 0.5rem 0.1rem 0.5rem;
+    line-height: 1.2;
+    color: white;
+    overflow-wrap: break-word;
+    
+    
+}
+
+.no-attribute-dl {
+    font-size: 14px;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    margin: 0rem 0.5rem 0.1rem 0.5rem;
+    line-height: 1.2;
+    color: red;
+}
+
+.sidebar-div-dl {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 15px 15px 15px;
+    padding: 15px 15px 15px 25px;
+    background-color: #353f59;
+    box-shadow: -5px -5px 20px 0 rgba(30, 39, 61, 0.55);
+    border-radius: 5px;
+}
+
+.sidebar-div-dl h3 {
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+}
+
+.close-cross{
+    text-align: center;
+    margin: 15px 10px 0px 15px;
+    cursor: pointer;
+    background: red;
+    width: 24px;
+    border-radius: 5px;
+    position: relative;
+    float: right; 
+}
+
+.cross-parent{
+    overflow: auto;
+}
+
+.copy-text {
+    margin: -39px 0px 0px 0px;
+    width: 15%;
+    background: #272D3F;
+    color: white;
+    border-radius: 3px;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+    float: right;
+    padding: 0px;
+    top: 34px;
+    right: -457px;
+}
+
+.copy-text-parent{
+    overflow: auto;
+}
