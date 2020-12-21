@@ -60,8 +60,8 @@ function getDataLayer(){
     document.body.appendChild(dL);
     
     var dataLayerJSON = JSON.parse(document.querySelectorAll("#dlHack")[0].textContent);
-    console.log("this is a DL: ");  
-    console.log(dataLayerJSON);
+/*     console.log("this is a DL: ");  
+    console.log(dataLayerJSON); */
       
     var params = ["contentGroup", "pageGroup", "pageId", "contentLocale", "gaId"];
     var property = document.createElement("div");
@@ -83,18 +83,15 @@ function getDataLayer(){
         }
            
     } 
-    var hasProperty = document.createElement("li");
-    hasProperty.classList.add("has-attribute-dl");
-    hasProperty.innerText = "GTM ID: " + document.querySelectorAll('script[src*="googletagmanager"]')[0].getAttribute("src").split("=")[1];
-    document.querySelectorAll("#dataLayerValues")[0].appendChild(hasProperty); 
+    var gtm = document.querySelectorAll('script[src*="googletagmanager"]');
+    gtm.forEach(function(gtmScript){
+        var gtmId = gtmScript.getAttribute("src").split("=")[1].split("&")[0];
+        var hasProperty = document.createElement("li");
+        hasProperty.classList.add("has-attribute-dl");
+        hasProperty.innerText = "GTM ID: " + gtmId;
+        document.querySelectorAll("#dataLayerValues")[0].appendChild(hasProperty);
+    })
 }
-
-/* function noActiveButton(){
-    var ids = ["allButtons", "errorButtons", "allDownloadButtons", "allBuyButtons"];
-    for (var g = 0; g < ids.length; g++) {
-        document.getElementById(ids[g]).firstChild.style.backgroundColor = "rgb(0, 133, 92)";
-    }    
-} */
 
 function addCross(){
     var innerHTML = '<svg data-v-393ba124="" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><g data-v-393ba124="" fill="none" fill-rule="evenodd"><path data-v-393ba124="" fill="#FFF" d="M7.383 7.99L3.019 3.618 3.636 3 8 7.372 12.364 3l.617.618L8.617 7.99 13 12.382l-.617.618L8 8.609 3.617 13 3 12.382z"></path></g></svg>'
@@ -109,6 +106,7 @@ function capitalLetter(word) {
 
 function createSidebar() {
     var sidebarWidth = window.innerWidth-600 + "px";
+    document.body.style.width = sidebarWidth;
     var new_div = createNewElement("div", "sidebarDivFirst","sidebar","","");
     // create div which will have all body inside andd then create another one for sidebar
     
@@ -352,7 +350,7 @@ function fillBoxes(button){
                 }
             })
             var gaEvent = {
-                "category" : "Category: CTA > Click On Download",
+                "category" : "Category: CTA > Click To Cart",
                 "action" : "Action: " + attributes["data-product-id"] + "_" + attributes["data-seats"] + "_" + attributes["data-maintenance"] + "_" + attributes["data-campaign"] + "_" + attributes["data-quantity"] + "_" + attributes["data-campaign-marker"] + "_" + attributes["data-product-category"], 
                 "label" : "Label: " + button.href
             }
