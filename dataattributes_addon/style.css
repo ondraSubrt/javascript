@@ -116,7 +116,7 @@
 .link-to-button-label {
     background-color: #00855c;
     margin: 10px 10px -3px 0px;
-    width: 30%;
+    width: 35%;
     text-align: center;
     padding: 0.5rem;
     border-radius: 0.3rem;
@@ -145,27 +145,56 @@
     flex-direction: column;
     justify-content: space-between;
     margin: 0 15px 15px 15px;
-    padding: 15px 15px 15px 25px;
+    padding: 15px 15px 15px 15px;
     background-color: #353f59;
     box-shadow: -0.5rem -0.5rem 3rem 0 rgba(30, 39, 61, 0.55);
     border-radius: 0.2rem;
     text-align: center;
 
-  }
+}
 
-  .menu-table button {
+table td {
+    padding: 5px;
+}
+
+.menu-table button {
     color: white;
     width: 100%;
     border: none;
     background: transparent;
-  }
+}
 
-  .menu-table div {
+.menu-table div {
     background-color: #00855c;
     border-radius: 0.2rem;
     margin: 0.2rem;
     padding: 0.6rem;
-  }
+}
+
+.filter-buttons {
+    position:absolute;
+    visibility:hidden;
+    opacity:0;
+}
+
+input[type=radio] + label {
+    background-color: #00855c;
+    border-radius: 0.2rem;
+    margin: 0rem;
+    padding: 0.5rem;
+    width: 100%;
+    color: white;
+    cursor: pointer;
+} 
+input[type=radio]:checked + label {
+    background-color: rgb(67, 178, 153);
+    border-radius: 0.2rem;
+    margin: 0rem;
+    padding: 0.5rem;
+    width: 100%;
+    color: white;
+    cursor: pointer;
+}
 
   .hidden {
     display: none;

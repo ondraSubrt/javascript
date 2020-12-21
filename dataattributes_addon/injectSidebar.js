@@ -1,52 +1,43 @@
-(function createSidebar(){
-    var sidebarWidth = window.innerWidth-600 + "px";
-    console.log(sidebarWidth);
-    var new_div = document.createElement("div");
-    new_div.id = "sidebarDivFirst";
-    new_div.className = "sidebar";
-    new_div.style.width = "600px";
-    // create div which will have all body inside andd then create another one for sidebar
-    //document.querySelectorAll(".js-navigation-bootstrap")[0].style.width = sidebarWidth;
-    //document.querySelectorAll("#main-content")[0].style.width = sidebarWidth;
-    if (document.querySelectorAll(".sticky-bar").length > 0){    
-        document.querySelectorAll(".sticky-bar")[0].style.width = sidebarWidth;
+var allButtons = {};
+var nodeOfDownloadButtons = document.querySelectorAll("a[href*='download-thank-you.php'], a[href*='/download'], a[href*='play.google.com'], a[href*='apps.apple.com']");
+var nodeOfBuyButtons =  document.querySelectorAll("a[href*='ipm.store.avast.com'], a[href*='store.avast.com'], a[href*='ipm.store-sl.avast.com'], a[href*='store-nw.avast.com'], a[href*='store-sl.avast.com'],	a[href*='ipm.store-ap.avast.com'], a[href*='store-cb.avast.com'], a[href*='ipm.store-cb.avast.com'], a[href*='shop.avg.com'], a[href*='checkout.hidemyass.com'], a[href*='/pricing']");
+var listOfDownloadButtons = Array.from(nodeOfDownloadButtons);
+var listOfBuyButtons = Array.from(nodeOfBuyButtons);
+var downloadAttributes = ["data-role", "data-download-name"]; // optional attributes "data-os", "data-cta"
+var buyAttributes = ["data-role", "data-product-id", "data-product-category", "data-seats", "data-maintenance", "data-campaign-marker", "data-quantity", "data-campaign"]; // optional attrbutes  "data-campaign"
+var buttonNodes = {
+    "download": nodeOfDownloadButtons, 
+    "buy": nodeOfBuyButtons
+}
+function createNewElement(elementType, elementId, elementClass, elementInnerHTML, elementInnerText){
+    elementId = elementId || "";
+    elementClass = elementClass || "";
+    elementInnerText = elementInnerText || "";
+    elementInnerHTML = elementInnerHTML || "";
+    var element = document.createElement(elementType);
+    if (elementClass != ""){
+        element.classList.add(elementClass);
     }
-    //new_div.innerHTML = "<table><tbody><tr><td>first</td><td>second</td><td>third</td><td>fourth</td></tr></tbody></table>"
-    var first = document.body.firstChild;
-    first.parentNode.insertBefore(new_div, first);
-    
-})();
-
-/* trying to show link to button only on visible buttons */
-
-function renderButton(type, index, buttonId){
-    if (type == "download"){
-        var bttn = "dl";
-    } else if (type == "buy"){
-        var bttn = "buy";
+    if (elementId != ""){
+        element.id = elementId;
+    }    
+    if (elementInnerHTML != ""){
+        element.innerHTML = elementInnerHTML;
     }
-    var divs = document.getElementsByTagName("div");
-    for (var r = 0; r < divs.length; r++) {
-        if (divs[r].id == bttn + "-" + index) { 
-            if (window.getComputedStyle(divs[r]).display !== "none" && window.getComputedStyle(divs[r]).visibility !== "hidden") {
-                if (divs[r].getBoundingClientRect().x * divs[r].getBoundingClientRect().x != 0){
-                    var linkToButton = document.createElement("div");
-                    linkToButton.classList.add("link-to-button-label");
-                    linkToButton.innerHTML = "<button onclick=document.getElementById('" + bttn + "-" + index + "').scrollIntoView()>to the button</button>";
-                    console.log(divs[r]);
-                    return document.querySelectorAll("#" + buttonId)[0].appendChild(linkToButton);    
-                }    
-            }
-        }
+    if (elementInnerText != ""){
+        element.innerText = elementInnerText;
     }
-} 
+    return element;
+}
 
-
-// Dodělat - https://stackoverflow.com/questions/32644906/accessing-all-the-window-variables-of-the-current-tab-in-chrome-extension
-(function _getDataLayer(){
+function getDataLayer(){
     var dL = document.createElement("script");
     var hackScript = 
-    `var originalDl = window.dataLayer;
+    `function copyTextToClipboard(idOfBtn) {
+        navigator.clipboard.writeText(idOfBtn);
+    };
+
+    var originalDl = window.dataLayer;
     var dlParams = ['contentGroup', 'pageGroup', 'pageId', 'contentLocale'];
     var outputJSON = {};
     for (var m = 0; m < originalDl.length; m++) {
@@ -63,7 +54,7 @@ function renderButton(type, index, buttonId){
     hiddenDiv.style.visibility = 'hidden';
     hiddenDiv.textContent = JSON.stringify(outputJSON);
     hiddenDiv.id = 'dlHack';
-    document.body.appendChild(hiddenDiv);`
+    document.body.appendChild(hiddenDiv);`;
     var scriptDl = document.createTextNode(hackScript);
     dL.appendChild(scriptDl);
     document.body.appendChild(dL);
@@ -96,316 +87,478 @@ function renderButton(type, index, buttonId){
     hasProperty.classList.add("has-attribute-dl");
     hasProperty.innerText = "GTM ID: " + document.querySelectorAll('script[src*="googletagmanager"]')[0].getAttribute("src").split("=")[1];
     document.querySelectorAll("#dataLayerValues")[0].appendChild(hasProperty); 
-})();
-
-function check(cla){
-    return cla.includes("no-attribute");
 }
+
+/* function noActiveButton(){
+    var ids = ["allButtons", "errorButtons", "allDownloadButtons", "allBuyButtons"];
+    for (var g = 0; g < ids.length; g++) {
+        document.getElementById(ids[g]).firstChild.style.backgroundColor = "rgb(0, 133, 92)";
+    }    
+} */
+
+function addCross(){
+    var innerHTML = '<svg data-v-393ba124="" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><g data-v-393ba124="" fill="none" fill-rule="evenodd"><path data-v-393ba124="" fill="#FFF" d="M7.383 7.99L3.019 3.618 3.636 3 8 7.372 12.364 3l.617.618L8.617 7.99 13 12.382l-.617.618L8 8.609 3.617 13 3 12.382z"></path></g></svg>'
+    var firstElement = document.getElementById("sidebarDivFirst");
+    firstElement.insertBefore(createNewElement("div", "crossParent", "cross-parent", "", ""), firstElement.firstChild);
+    document.getElementById("crossParent").appendChild(createNewElement("div", "closeCross", "close-cross", innerHTML, ""));
+}
+
+function capitalLetter(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1)
+}
+
+function createSidebar() {
+    var sidebarWidth = window.innerWidth-600 + "px";
+    var new_div = createNewElement("div", "sidebarDivFirst","sidebar","","");
+    // create div which will have all body inside andd then create another one for sidebar
     
-function allDownloadsBuys(buttonType) { // vymazat labely ve stránce
-    var hidden = document.querySelectorAll(".sidebar-div.hidden");
-    for (var s = 0; s < hidden.length; s++) {
-        hidden[s].classList.remove("hidden");       
+    if (document.querySelectorAll(".sticky-bar").length > 0){    
+        document.querySelectorAll(".sticky-bar")[0].style.width = sidebarWidth;
     }
-
-    var allLabels = document.querySelectorAll('div[class*="button-label-"]');
-    for (var s = 0; s < allLabels.length; s++) {
-        allLabels[s].classList.remove("hidden");       
-    }
-
-    var listOfBoxes = document.querySelectorAll(".sidebar-div");
-    for (var s = 0; s < listOfBoxes.length; s++) {
-        if (listOfBoxes[s].id.includes(buttonType)){
-            listOfBoxes[s].classList.add("hidden");
-        } 
-    }
-    var listOfLabels = document.querySelectorAll(".button-label-" + buttonType);
-    for (var s = 0; s < listOfLabels.length; s++) {
-        if (buttonType == "download"){
-            if (listOfLabels[s].id.includes("dl-")){
-                listOfLabels[s].classList.add("hidden");
-            } 
-        } else {
-            if (listOfLabels[s].id.includes("buy-")){
-                listOfLabels[s].classList.add("hidden");
-            } 
-        }
-        
-    }
-}
-
-function filterErrors() {
-    var listOfErrorBoxes = document.querySelectorAll(".sidebar-div");
-    for (var s = 0; s < listOfErrorBoxes.length; s++) {
-        var listOfDivs = listOfErrorBoxes[s].querySelectorAll("li");   
-        var cl = [];
-        for (var t = 0; t < listOfDivs.length; t++) {
-            cl.push(listOfDivs[t].className); 
-        }
-        console.log(cl);
-        if (cl.some(check) == false) {
-            console.log(listOfErrorBoxes[s])
-            listOfErrorBoxes[s].classList.add("hidden");
-            console.log(listOfErrorBoxes[s].style)
-        }
-    }
-}
-
-function showAll() {
-    var listOfErrorBoxes = document.querySelectorAll(".sidebar-div.hidden");
-    for (var s = 0; s < listOfErrorBoxes.length; s++) {
-        listOfErrorBoxes[s].classList.remove("hidden");       
-    }
-    var allLabels = document.querySelectorAll('div[class*="button-label-"]');
-    for (var s = 0; s < allLabels.length; s++) {
-        allLabels[s].classList.remove("hidden");       
-    }
-}
-
-(function _getAllButtons(){
-    var nodeOfDownloadButtons = document.querySelectorAll("a[href*='download-thank-you.php'], a[href*='/download'], a[href*='play.google.com'], a[href*='apps.apple.com']");
-    var nodeOfBuyButtons =  document.querySelectorAll("a[href*='ipm.store.avast.com'], a[href*='store.avast.com'], a[href*='ipm.store-sl.avast.com'],	a[href*='store-nw.avast.com'], a[href*='store-sl.avast.com'],	a[href*='ipm.store-ap.avast.com'], a[href*='store-cb.avast.com'],	a[href*='ipm.store-cb.avast.com'],	a[href*='shop.avg.com'], a[href*='checkout.hidemyass.com'], a[href*='/pricing']");
-    var listOfDownloadButtons = Array.from(nodeOfDownloadButtons);
-    var listOfBuyButtons = Array.from(nodeOfBuyButtons);
-    var downloadAttributes = ["data-role", "data-download-name"]; // optional attributes "data-os", "data-cta"
-    var buyAttributes = ["data-role", "data-product-id", "data-product-category", "data-seats", "data-maintenance", "data-campaign", "data-campaign-marker"]; // optional attrbutes
-
-    var menuButtons = document.createElement("div");
-    menuButtons.id = "menuButtons";
-    menuButtons.classList.add("menu-table");
-    menuButtons.innerHTML = "<table><tbody><tr><td><a href='#' id='allButtons'><div>All buttons</div></a></td><td><a href='#' id='errorButtons'><div>Buttons with error</div></a></td><tr><td><a href='#' id='allDownloadButtons'><div>All download buttons</div></a></td><td><a href='#' id='allBuyButtons'><div>All buy buttons</div></a></td></tbody></table>";
-    document.getElementById("sidebarDivFirst").appendChild(menuButtons);
+    
+    var first = document.body.firstChild;
+    first.parentNode.insertBefore(new_div, first);
+    
+    getDataLayer();
+    
+    var menuHTML = "<table><tbody><tr><td><input type='radio' id='allButtons' class='filter-buttons' name='filter-buttons' ><label for='allButtons'>All buttons</label></td><td><input type='radio' id='errorButtons' class='filter-buttons' name='filter-buttons' ><label for='errorButtons'>Buttons with error</label></td></tr><tr><td><input type='radio' id='allDownloadButtons' class='filter-buttons' name='filter-buttons' ><label for='allDownloadButtons'>All download buttons</label></td><td><input type='radio' id='allBuyButtons' class='filter-buttons' name='filter-buttons' ><label for='allBuyButtons'>All buy buttons</label></td></tr></tbody></table>";
+    document.getElementById("sidebarDivFirst").appendChild(createNewElement("div", "menuButtons", "menu-table", menuHTML, ""));
 
     if (!document.getElementById("more-options")){
-        var moreOptionsDiv = document.createElement("div");
-        moreOptionsDiv.id = "more-options";
-        moreOptionsDiv.classList.add("more-options");
-        moreOptionsDiv.innerHTML = "<input type='checkbox' id='visible-on-page' name='visible-on-page' value='visible'><label for='visible-on-page'> Show buttons visible on page only</label>";
-        document.getElementById("menuButtons").appendChild(moreOptionsDiv);
-    }    
+        var optionsHTML = "<input type='checkbox' id='visibleOnPage' name='visible-on-page' value='visible'><label for='visible-on-page'> Show only buttons visible on page</label>";
+        document.getElementById("menuButtons").appendChild(createNewElement("div", "more-options", "more-options", optionsHTML, ""));
+    }   
     
-    var moreOptionsInputVisible = document.querySelector("input[name=visible-on-page]");;
-    moreOptionsInputVisible.addEventListener( 'change', function() {
-        var sidebarDivs = document.querySelectorAll(".sidebar-div");
-        if(this.checked) {
-            sidebarDivs.forEach(function(sidebarDiv) {
-                if (sidebarDiv.getElementsByTagName("button").length == 0){
-                    sidebarDiv.classList.add("hide-non-visible");
-                }
-            });
-        } else {
-            sidebarDivs.forEach(function(sidebarDiv) {
-                if(sidebarDiv.className.includes("hide-non-visible")){
-                    sidebarDiv.classList.remove("hide-non-visible");
-                }
-                
-            });
-            
-        }
-    });
-    
-    document.getElementById("allButtons").addEventListener("click", showAll);
-    document.getElementById("errorButtons").addEventListener("click", filterErrors);
-    document.getElementById("allDownloadButtons").addEventListener("click", function(){allDownloadsBuys("buy")});
-    document.getElementById("allBuyButtons").addEventListener("click", function(){allDownloadsBuys("download")});
+    addCross();
+}
 
-    for (var i = 0; i < listOfDownloadButtons.length; i++) {
-        var downloadButton = document.createElement("div");
-        downloadButton.id = "download" + i;
-        downloadButton.classList.add("sidebar-div");
-        downloadButton.innerHTML = "<h3>Download Button " + i + "</h3>";
-        document.querySelectorAll("#sidebarDivFirst")[0].appendChild(downloadButton);
-        for (var j = 0; j < downloadAttributes.length; j++) {
-            if (listOfDownloadButtons[i].hasAttribute(downloadAttributes[j]) && listOfDownloadButtons[i].attributes[downloadAttributes[j]].value != "") {
-                var hasAttribute = document.createElement("li");
-                hasAttribute.classList.add("has-attribute");
-                hasAttribute.innerText = downloadAttributes[j] + ": " + listOfDownloadButtons[i].attributes[downloadAttributes[j]].value;
-                document.querySelectorAll("#" + downloadButton.id)[0].appendChild(hasAttribute); 
-            } else if (listOfDownloadButtons[i].hasAttribute(downloadAttributes[j]) && listOfDownloadButtons[i].attributes[downloadAttributes[j]].value == ""){
-                var hasAttribute = document.createElement("li");
-                hasAttribute.classList.add("has-attribute-no-value");
-                hasAttribute.innerText = downloadAttributes[j] + ": " + "missing value";
-                document.querySelectorAll("#" + downloadButton.id)[0].appendChild(hasAttribute); 
-            } else {
-                var hasAttribute = document.createElement("li");
-                hasAttribute.classList.add("no-attribute");
-                hasAttribute.innerText = downloadAttributes[j] + ": " + "missing attribute";
-                document.querySelectorAll("#" + downloadButton.id)[0].appendChild(hasAttribute); 
+function buttonType(button) {
+    if (button.attributes.href.value.match(/.*download.*|.*play.*|.*apps.*/)){
+        return "download";
+    } else if (button.attributes.href.value.includes("store")){
+        return "buy";
+    }
+}
+function getAttributes(button){ // if there are other types of buttons add the condition
+    if (buttonType(button) == "download"){
+        var dlAttributes = {
+            "data-role": button.dataset.role,
+            "data-download-name": button.dataset.downloadName
+        }
+        return dlAttributes 
+    } else if (buttonType(button) == "buy"){
+        var buyAttributes = {
+            "data-role": button.dataset.role,
+            "data-product-id": button.dataset.productId,
+            "data-product-category": button.dataset.productCategory,
+            "data-seats": button.dataset.seats,
+            "data-maintenance": button.dataset.maintenance,
+            "data-campaign-marker": button.dataset.campaignMarker,
+            "data-quantity": button.dataset.quantity,
+            "data-campaign": button.dataset.campaign
+        }
+        return buyAttributes;
+    }
+    
+}
+
+function addLabel(button, index){
+    var labelButtonType = buttonType(button);
+    var labelClass = "button-label-" + labelButtonType;
+    var labelParent = button.parentElement; 
+    var labelId = labelButtonType + "Label" + index;
+    var labelInnerHTML = "<button onclick=document.getElementById('" + labelButtonType + "Box" + index + "').scrollIntoView()>" + capitalLetter(labelButtonType) + " button " + index + "</button>";
+    labelParent.insertBefore(createNewElement("div", labelId, labelClass, labelInnerHTML, ""), labelParent.firstChild);
+    return document.getElementById(labelId);  
+}
+
+function addBox(button, index){
+    var boxButtonType = buttonType(button);
+    var boxInnerHTML = "<h3>" + capitalLetter(boxButtonType) + " button " + index + "</h3>";
+    var boxClass = "sidebar-div";
+    var boxId = boxButtonType + "Box" + index;
+    document.getElementById("sidebarDivFirst").appendChild(createNewElement("div", boxId, boxClass, boxInnerHTML, ""));
+    return document.getElementById(boxId);
+}
+
+function addLink(button, index){
+    var linkButtonType = buttonType(button);
+    var linkInnerHTML = "<button onclick=document.getElementById('" + linkButtonType + "Label" + index + "').scrollIntoView()>Show " + capitalLetter(linkButtonType) + " #" + index + "</button>";
+    var linkClass = "link-to-button-label";
+    var linkId = "linkTo" + capitalLetter(linkButtonType) + "Label" + index;
+    document.getElementById(linkButtonType + "Box" + index).appendChild(createNewElement("div", linkId, linkClass, linkInnerHTML, ""));
+    return document.getElementById(linkId);
+}
+
+function isVisible(button){
+
+    var divClientRect = button.getBoundingClientRect();
+    var computedStyles = window.getComputedStyle(button);
+    if (computedStyles.display == "none") {
+        return false;
+    } else if (computedStyles.visibility == "hidden") {
+        return false;
+    } else if (divClientRect.x * divClientRect.y == 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function hasErrors(button){
+    var attributes = getAttributes(button);
+    var errors = [];
+    Object.keys(attributes).forEach(function(attribute, i){
+        if (attributes[attribute] === undefined) {
+            if (attribute == "data-campaign") {
+                errors[i] = "ok";
+            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
+                errors[i] = "ok";
             } 
-
-        }
-        
-        var labelClass = "button-label-download";
-        var buttonLabelParent = listOfDownloadButtons[i].parentElement; 
-        var buttonLabel = document.createElement("div"); 
-        buttonLabel.classList.add(labelClass);
-        buttonLabel.id = "dl-" + i;
-        buttonLabel.innerHTML = "<button onclick=document.getElementById('download" + i + "').scrollIntoView()>Download Button" + i + "</button>";
-
-        buttonLabelParent.insertBefore(buttonLabel, buttonLabelParent.firstChild);
-        
-        
-
-        var downloadButtonGA = document.createElement("div");
-        downloadButtonGA.id = "downloadButton" + i;
-        downloadButtonGA.innerHTML = '<h3>Event shown in GA</h3>';
-        document.querySelectorAll("#" + downloadButton.id)[0].appendChild(downloadButtonGA);
-
-        var eventArray = ["Category", "Action", "Label"];
-
-        var dlAttributesObject = {};
-        dlAttributesObject.downloadName = listOfDownloadButtons[i].dataset.hasOwnProperty("downloadName") && listOfDownloadButtons[i].dataset.downloadName != "" ? listOfDownloadButtons[i].dataset.downloadName : "N/A";
-        dlAttributesObject.role = listOfDownloadButtons[i].dataset.hasOwnProperty("role") && listOfDownloadButtons[i].dataset.role != "" ? listOfDownloadButtons[i].dataset.role : "N/A";
-   
-        if(dlAttributesObject.role == "download-link" && dlAttributesObject.downloadName != "N/A"){ // GTM Trigger
-            for (let f = 0; f < eventArray.length; f++) {
-                var gaEvents = document.createElement("li");
-                gaEvents.classList.add("has-attribute");
-                if (eventArray[f] == "Category"){
-                    gaEvents.innerText = eventArray[f] + ": " + "CTA > Click On Download";
-                } else if (eventArray[f] == "Action"){
-                    if (listOfDownloadButtons[i].dataset.downloadName){
-                        gaEvents.innerText = eventArray[f] + ": " + dlAttributesObject.downloadName; 
-                    } else {
-                        gaEvents.innerText = eventArray[f] + ": " + "N/A"; 
-                    }        
-                } else {
-                    gaEvents.innerText = eventArray[f] + ": " + document.location.href;
-                }
-                document.querySelectorAll("#" + downloadButton.id)[0].appendChild(gaEvents);
-                
+            else {
+                errors[i] = "error";
             }
+        } else if (attributes[attribute] == "") { // rozdělit na dvě podmínky a podle toho jestli je undefined nebo prázdný přiřadit třídu a text v <i> potom vytvořit div se všemi <i>, případně eventou, která se posílá do GA a použít insertAfter() <H3> v boxu. možná poslat do funkce i index kvůli indexu boxu
+            if (attribute == "data-campaign") {
+                errors[i] = "ok";
+            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
+                errors[i] = "ok";
+            } 
+            else {
+                errors[i] = "error";
+            } 
         } else {
-            var gaEvents = document.createElement("div");
-            gaEvents.classList.add("no-attribute");
-            gaEvents.innerText = "This event will not be sent to GA!";
-            document.querySelectorAll("#" + downloadButton.id)[0].appendChild(gaEvents);
+            errors[i] = "ok";
         }
-
-        renderButton("download", i, downloadButton.id);
+    })
+    if (errors.some(function(el){return el == "error"})){
+        return "error";
+    } else {
+        return "ok";
     }
+} 
 
-    for (var i = 0; i < listOfBuyButtons.length; i++) {
-        var buyButton = document.createElement("div");
-        buyButton.id = "buy" + i;
-        buyButton.classList.add("sidebar-div");
-        buyButton.innerHTML = "<h3>Buy Button " + i + "</h3>";
-        document.querySelectorAll("#sidebarDivFirst")[0].appendChild(buyButton);
-        for (var j = 0; j < buyAttributes.length; j++) {
-            if (listOfBuyButtons[i].hasAttribute(buyAttributes[j]) && listOfBuyButtons[i].attributes[buyAttributes[j]].value != "") {
-                var hasAttribute = document.createElement("li");
-                hasAttribute.classList.add("has-attribute");
-                hasAttribute.innerText = buyAttributes[j] + ": " + listOfBuyButtons[i].attributes[buyAttributes[j]].value;
-                document.querySelectorAll("#" + buyButton.id)[0].appendChild(hasAttribute); 
-            } else if (listOfBuyButtons[i].hasAttribute(buyAttributes[j]) && listOfBuyButtons[i].attributes[buyAttributes[j]].value == ""){
-                var hasAttribute = document.createElement("li");
-                hasAttribute.classList.add("has-attribute-no-value");
-                hasAttribute.innerText = buyAttributes[j] + ": " + "missing value";
-                document.querySelectorAll("#" + buyButton.id)[0].appendChild(hasAttribute); 
+function fillBoxes(button){
+    var attributes = getAttributes(button);
+    var classes = [];
+    var texts = [];
+    var elements = [];
+    Object.keys(attributes).forEach(function(attribute, i){
+        if (attributes[attribute] === undefined) {
+            if (attribute == "data-campaign") {
+                classes[i] = "has-atribute-no-value";
+                texts[i] = "missing attribute (optional attribute)";
+            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
+                classes[i] = "has-attribute-no-value";
+                texts[i] = "mandatory for SMB (optional for Consumer)"; // Nešlo by nezobrazovat pro Consumer?
+            } 
+            else {
+                classes[i] = "no-attribute";
+                texts[i] = "missing attribute";
+            }
+        } else if (attributes[attribute] == "") { 
+            if (attribute == "data-campaign") {
+                classes[i] = "has-attribute-no-value";
+                texts[i] = "missing value (optional attribute)";
+            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
+                classes[i] = "has-attribute-no-value";
+                texts[i] = "mandatory for SMB (optional for Consumer)";
+            } 
+            else {
+                classes[i] = "has-attribute-no-value";
+                texts[i] = "missing value";
+            } 
+        } else {
+            if (attributes["data-role"] != "download-link" && buttonType(button) == "download"){
+                classes[i] = "no-attribute";
+                texts[i] = "wrong value 'download-link' expected";
+            } else if (attributes["data-role"] != "cart-link" && buttonType(button) == "buy"){
+                classes[i] = "no-attribute";
+                texts[i] = "wrong value 'cart-link' expected";
             } else {
-                var hasAttribute = document.createElement("li");
-                hasAttribute.classList.add("no-attribute");
-                hasAttribute.innerText = buyAttributes[j] + ": " + "missing attribute";
-                document.querySelectorAll("#" + buyButton.id)[0].appendChild(hasAttribute); 
+                classes[i] = "has-attribute";
+                texts[i] = attributes[attribute]; 
             }
-            
-        } 
-
-        var labelClass = "button-label-buy";
-        var buttonLabelParent = listOfBuyButtons[i].parentElement; 
-        var buttonLabel = document.createElement("div"); 
-        buttonLabel.innerText = "Buy button" + " " + i;
-        buttonLabel.classList.add(labelClass);
-        buttonLabel.id = "buy-" + i;
-        buttonLabel.innerHTML = "<button onclick=document.getElementById('buy" + i + "').scrollIntoView()>Buy Button" + i + "</button>";
-        /* var computedStyles = window.getComputedStyle(listOfDownloadButtons[i]);
-        var divClientRect = listOfDownloadButtons[i].getBoundingClientRect();
-        if (computedStyles.display == "none" || computedStyles.visibility !== "hidden" || divClientRect.x * divClientRect.y == 0) {
-                buttonLabel.classList.add("hidden");
-        } */
-        buttonLabelParent.insertBefore(buttonLabel, buttonLabelParent.firstChild);
-
-        var buyButtonGA = document.createElement("div");
-        buyButtonGA.id = "buyButton" + i;
-        buyButtonGA.innerHTML = '<h3>Event shown in GA</h3>';
-        document.querySelectorAll("#" + buyButton.id)[0].appendChild(buyButtonGA);
-
-        var eventArray = ["Category", "Action", "Label"];
-        var attributesObject = {};
-        attributesObject.role = listOfBuyButtons[i].dataset.hasOwnProperty("role") && listOfBuyButtons[i].dataset.role != "" ? listOfBuyButtons[i].dataset.role : "N/A";
-        attributesObject.productId = listOfBuyButtons[i].dataset.hasOwnProperty("productId") && listOfBuyButtons[i].dataset.productId != "" ? listOfBuyButtons[i].dataset.productId : "N/A";
-        attributesObject.seats = listOfBuyButtons[i].dataset.hasOwnProperty("seats") && listOfBuyButtons[i].dataset.seats != "" ? listOfBuyButtons[i].dataset.seats : "N/A";
-        attributesObject.maintenence = listOfBuyButtons[i].dataset.hasOwnProperty("maintenance") && listOfBuyButtons[i].dataset.maintenance != "" ? listOfBuyButtons[i].dataset.maintenance : "N/A";
-        attributesObject.campaign = listOfBuyButtons[i].dataset.hasOwnProperty("campaign") && listOfBuyButtons[i].dataset.campaign != "" ? listOfBuyButtons[i].dataset.campaign : "N/A";
-        attributesObject.quantity = listOfBuyButtons[i].dataset.hasOwnProperty("quantity") && listOfBuyButtons[i].dataset.quantity != "" ? listOfBuyButtons[i].dataset.quantity : "N/A";
-        attributesObject.productCategory = listOfBuyButtons[i].dataset.hasOwnProperty("productCategory") && listOfBuyButtons[i].dataset.productCategory != "" ? listOfBuyButtons[i].dataset.productCategory : "N/A";
-        attributesObject.campaignMarker = listOfBuyButtons[i].dataset.hasOwnProperty("campaignMarker") && listOfBuyButtons[i].dataset.campaignMarker != "" ? listOfBuyButtons[i].dataset.campaignMarker.replace("_","#") : "N/A";
-        
-        if(listOfBuyButtons[i].dataset.role == "cart-link"){ // GTM trigger
-            for (let f = 0; f < eventArray.length; f++) {
-                var gaEvents = document.createElement("li");
-                gaEvents.classList.add("has-attribute");
-                
-                if (eventArray[f] == "Category"){
-                    gaEvents.innerText = eventArray[f] + ": " + "CTA > Click to Cart";
-                } else if (eventArray[f] == "Action"){
-                    gaEvents.innerText = eventArray[f] + ": " + attributesObject.productId + "_" + attributesObject.seats + "_" + attributesObject.maintenence + "_" + attributesObject.campaign + "_" + attributesObject.quantity + "_" + attributesObject.campaignMarker + "_" + attributesObject.productCategory;
-                } else {
-                    gaEvents.innerText = eventArray[f] + ": " + listOfBuyButtons[i].href;
-                }
-                document.querySelectorAll("#" + buyButton.id)[0].appendChild(gaEvents);
-                
-            }
-        } else {
-            var gaEvents = document.createElement("div");
-            gaEvents.classList.add("no-attribute");
-            gaEvents.innerText = "This event will not be sent to GA!";
-            document.querySelectorAll("#" + buyButton.id)[0].appendChild(gaEvents);
         }
 
-        renderButton("buy", i, buyButton.id);
-    }
-})();
-
-
-function updateButtons (){    
-    console.log("spusteno");
-    var listOfLinksToButtonsToDelete = document.querySelectorAll(".link-to-button-label");
-    listOfLinksToButtonsToDelete.forEach(function(div){
-        div.remove();
+        elements[i] = createNewElement("li", "", classes[i], "", attribute + " : " + texts[i]);
+    })
+    var boxHeadline = createNewElement("div", "", "", "", "");
+    elements.forEach(function(element){
+        boxHeadline.appendChild(element);
     })
 
-    var divs = document.querySelectorAll("div");
-    divs.forEach(function(div){
-        if (div.id.match(/^buy-|^dl-/)) {
-            var computedStyles = window.getComputedStyle(div);
-            if (computedStyles.display !== "none" && computedStyles.visibility !== "hidden") {
-                var divClientRect = div.getBoundingClientRect();
-                if (divClientRect.x * divClientRect.y != 0){
-                    //console.log("not hiden:");
-                    //console.log(div);
-                    var type = "";
-                    if (div.id.includes("buy-")){
-                        type = div.id.replace("buy-", "buy");
-                        //console.log(type);
-                    } else if (div.id.includes("dl-")){
-                        type = div.id.replace("dl-", "download");
-                        //console.log(type);
-                    }
-                    var linkToButton = document.createElement("div");
-                    linkToButton.classList.add("link-to-button-label");
-                    linkToButton.innerHTML = "<button onclick=document.getElementById('" + div.id + "').scrollIntoView()>to the button</button>";
-                    //console.log(div);
-                    //console.log(type);
-                    document.getElementById(type).appendChild(linkToButton);  
-                    console.log(type);
-                     
-                     
-                }    
-            }    
+    
+    boxHeadline.appendChild(createNewElement("h3", "", "", "", "GA Event"));
+    
+    if (attributes["data-role"] != undefined || attributes["data-role"] != "") {
+        if (attributes["data-role"] == "download-link" && buttonType(button) == "download"){
+            if (attributes["data-download-name"] == undefined || attributes["data-download-name"] == ""){
+                var boxAttributes = createNewElement("div", "notSentToGA", "not-send-to-ga", "", "( ! ) This event will not be sent to GA!");
+                
+            } else {
+                var gaEvent = {
+                    "category" : "Category: CTA > Click On Download",
+                    "action" : "Action: " + attributes["data-download-name"], 
+                    "label" : "Label: " + button.href
+                }
+
+                var boxAttributes = createNewElement("div", "", "", "", "");
+                boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["category"]));
+                boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["action"]));
+                boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["label"]));
+            }
+
+        } else if (attributes["data-role"] == "cart-link" && buttonType(button) == "buy"){
+            Object.keys(attributes).forEach(function(attribute){
+                if(attributes[attribute] == undefined || attributes[attribute] == ""){
+                    attributes[attribute] = "N/A";
+                }
+            })
+            var gaEvent = {
+                "category" : "Category: CTA > Click On Download",
+                "action" : "Action: " + attributes["data-product-id"] + "_" + attributes["data-seats"] + "_" + attributes["data-maintenance"] + "_" + attributes["data-campaign"] + "_" + attributes["data-quantity"] + "_" + attributes["data-campaign-marker"] + "_" + attributes["data-product-category"], 
+                "label" : "Label: " + button.href
+            }
+            var boxAttributes = createNewElement("div", "", "", "", "");
+            boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["category"]));
+            boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["action"]));
+            boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["label"]));
+        } else {
+            var boxAttributes = createNewElement("div", "notSentToGA", "not-send-to-ga", "", "( ! ) wrong 'data-role' attribute value");
+        }// else if{************ sem doplnit podmínku pro dlaší typy tlačítek ********}
+    } else {
+        var boxAttributes = createNewElement("div", "notSentToGA", "not-send-to-ga", "", "( ! ) This event will not be sent to GA!");
+        
+    }
+    boxHeadline.appendChild(boxAttributes);
+    return boxHeadline;
+} 
+
+function addButtonToObject(button, index) {
+    button.id = buttonType(button) + "Button" + index;
+    var buttonObject = {};
+    buttonObject = {
+        buttonType: buttonType(button),
+        button: {
+            element: button,
+            box: addBox(button, index),
+            label: addLabel(button, index),
+            link: addLink(button, index),
+            error: hasErrors(button),
+            attributes: getAttributes(button),
+            visible: isVisible(button)
         }
+    };
+    return buttonObject;
+}
+
+function allButtonNodes(buttons) {
+    var allButtons = [];
+    Object.keys(buttons).forEach(function(type, index){
+        for (var i = 0; i < buttons[type].length; i++) {
+            allButtons.push(buttons[type][i]);
+        }
+    })
+    return allButtons;
+}
+
+function getButtons(buttons){
+    buttons.forEach(function(button) {
+        var typeOfButton = buttonType(button);
+        if (allButtons[typeOfButton] === undefined){
+            allButtons[typeOfButton] = [];
+        }
+        var index = allButtons[typeOfButton].length 
+        allButtons[typeOfButton].push(addButtonToObject(button, index));
+    });
+};
+
+function showAll() {
+    Object.keys(allButtons).forEach(function(type){
+        allButtons[type].forEach(function(buttons) {
+            if (buttons.button.box.className.includes("hide-non-visible")){
+                buttons.button.box.classList.remove("hide-non-visible");
+                buttons.button.label.classList.remove("hidden");
+            }
+        })
     })
 }
 
-window.addEventListener("hashchange", updateButtons);
+function filterErrors(){
+    showAll();
+    Object.keys(allButtons).forEach(function(type){
+        allButtons[type].forEach(function(buttons) {
+            if (buttons.button.error == "ok"){
+                buttons.button.box.classList.add("hide-non-visible");
+                buttons.button.label.classList.add("hidden");
+            }    
+        })
+    })
+}
 
+function allDownloadsBuys(type) { 
+    showAll();
+    allButtons[type].forEach(function(buttons) {
+        buttons.button.box.classList.add("hide-non-visible");            
+        buttons.button.label.classList.add("hidden");
+    });
+}
+
+// hide all links to buttons which are not visible on the page
+function showVisibleOnly(){
+    Object.keys(allButtons).forEach(function(type){
+        allButtons[type].forEach(function(buttons) {
+            buttons.button.visible = isVisible(buttons.button.element)            
+            if (buttons.button.visible === false) {
+                buttons.button.link.classList.add("hidden")
+            } else {
+                if (buttons.button.link.className.includes("hidden")){
+                    buttons.button.link.classList.remove("hidden")
+                }
+            }
+        });
+    });
+}
+
+function deleteAddonData(buttons){
+    Object.keys(buttons).forEach(function(type){
+        buttons[type].forEach(function(elem){
+            elem.button.box.remove();
+            elem.button.label.remove();
+            elem.button.element.id = "";
+        })
+    });
+}; 
+
+function closeAddon(allButtons){
+    Object.keys(allButtons).forEach(function(type){
+        console.log(allButtons[type]);
+        allButtons[type].forEach(function(buttons){
+            buttons.button.label.remove(); 
+            buttons.button.element.id = "";
+        })
+    })
+    document.getElementById("sidebarDivFirst").remove(); 
+    allButtons = {};
+}
+
+function addAtributesToBox(){
+    Object.keys(allButtons).forEach(function(type){
+        allButtons[type].forEach(function(buttons){
+            var attr = fillBoxes(buttons.button.element);
+            var chld = buttons.button.box.childNodes.length-1;
+            buttons.button.box.insertBefore(attr, buttons.button.box.childNodes[chld]);
+            
+        });
+    })
+}
+
+// creating buttons object
+createSidebar();
+document.getElementById("allButtons").checked = true;
+getButtons(nodeOfDownloadButtons);
+getButtons(nodeOfBuyButtons);
+addAtributesToBox();
+showVisibleOnly();
+
+// ------------------- buttons object is completely created
+
+// toggling
+
+function toggleVisibleBoxes(){
+    var hideInvisible = document.getElementById("visibleOnPage");
+    if (hideInvisible.checked){
+        Object.keys(allButtons).forEach(function(type){
+            allButtons[type].forEach(function(buttons){
+                if (!buttons.button.box.className.includes("hide-non-visible")){
+                    if (buttons.button.visible == false){
+                        buttons.button.box.classList.add("hide-non-visible");
+                    }
+                }                 
+            });
+        })
+    } else {
+        var filters = document.getElementsByName("filter-buttons");
+        filters.forEach(function(filter){
+        if (filter.checked){
+            if (filter.id == "allButtons") {
+                showAll();
+                showVisibleOnly(); 
+            } else if (filter.id == "errorButtons"){
+                showAll();
+                showVisibleOnly();
+                filterErrors();    
+            } else if (filter.id == "allBuyButtons"){
+                showAll();
+                showVisibleOnly();
+                allDownloadsBuys("download");
+            } else if (filter.id == "allDownloadButtons"){
+                showAll();
+                showVisibleOnly();
+                allDownloadsBuys("buy");
+            }
+        } 
+    })
+    }
+}
+
+function filterButtons(){
+    var filters = document.getElementsByName("filter-buttons");
+    filters.forEach(function(filter){
+        if (filter.checked){
+            if (filter.id == "allButtons") {
+                showAll();
+                showVisibleOnly();
+                toggleVisibleBoxes(); 
+            } else if (filter.id == "errorButtons"){
+                showAll();
+                showVisibleOnly();
+                filterErrors();
+                toggleVisibleBoxes();    
+            } else if (filter.id == "allBuyButtons"){
+                showAll();
+                showVisibleOnly();
+                allDownloadsBuys("download");
+                toggleVisibleBoxes();
+            } else if (filter.id == "allDownloadButtons"){
+                showAll();
+                showVisibleOnly();
+                allDownloadsBuys("buy");
+                toggleVisibleBoxes();
+            }
+        } 
+    })
+}
+
+// listeners
+
+var filteringButtons = document.getElementsByName("filter-buttons");
+filteringButtons.forEach(function(filterButton){
+    filterButton.addEventListener("change", filterButtons);
+})
+
+var showHideVisible = document.getElementById("visibleOnPage");
+showHideVisible.addEventListener("change", toggleVisibleBoxes); 
+
+document.getElementById("closeCross").addEventListener("click", function(){closeAddon(allButtons)});
+
+window.addEventListener("hashchange", function(){
+    showAll();
+    showVisibleOnly();
+    filterButtons();
+});
+
+var selects = document.querySelectorAll("select");
+var btns = allButtonNodes(allButtons);
+selects.forEach(function(select){
+    select.addEventListener("change", function(){
+        deleteAddonData(allButtons);
+        allButtons = {};
+        var newBtns = document.querySelectorAll("a[href*='download-thank-you.php'],a[href*='/download'],a[href*='play.google.com'],a[href*='apps.apple.com'],a[href*='ipm.store.avast.com'],a[href*='store.avast.com'],a[href*='ipm.store-sl.avast.com'],a[href*='store-nw.avast.com'],a[href*='store-sl.avast.com'],a[href*='ipm.store-ap.avast.com'],a[href*='store-cb.avast.com'],a[href*='ipm.store-cb.avast.com'],a[href*='shop.avg.com'],a[href*='checkout.hidemyass.com'],a[href*='/pricing']")  //document.querySelectorAll("a[href*='download-thank-you.php']:not([id]),a[href*='/download']:not([id]),a[href*='play.google.com']:not([id]),a[href*='apps.apple.com']:not([id]),a[href*='ipm.store.avast.com']:not([id]),a[href*='store.avast.com']:not([id]),a[href*='ipm.store-sl.avast.com']:not([id]),a[href*='store-nw.avast.com']:not([id]),a[href*='store-sl.avast.com']:not([id]),a[href*='ipm.store-ap.avast.com']:not([id]),a[href*='store-cb.avast.com']:not([id]),a[href*='ipm.store-cb.avast.com']:not([id]),a[href*='shop.avg.com']:not([id]),a[href*='checkout.hidemyass.com']:not([id]),a[href*='/pricing']:not([id])");
+        getButtons(newBtns); 
+        addAtributesToBox();
+        showVisibleOnly();
+        filterButtons();
+    })
+})

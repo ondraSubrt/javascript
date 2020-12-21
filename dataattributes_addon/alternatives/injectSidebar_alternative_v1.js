@@ -31,8 +31,8 @@ function createNewElement(elementType, elementId, elementClass, elementInnerHTML
 }
 
 
-function copyTextToClipboard(id) {
-    navigator.clipboard.writeText(id)
+function copyTextToClipboard(idOfBtn) {
+    navigator.clipboard.writeText(idOfBtn);
 }
 
 function addLabels(buttonsList){
@@ -68,20 +68,39 @@ function addLabels(buttonsList){
 //      labels []
 //      links []     
 
-function showOnlyVisibleButtons(btns){ // allbuttons
+/* function showOnlyVisibleButtons(btns){ // allbuttons
     for (var d = 0; d < btns.buttons.length; d++) {
         var computedStyles = window.getComputedStyle(btns.buttons[d]);
-        if (computedStyles.display !== "none" || computedStyles.visibility !== "hidden") {
+        if (computedStyles.display != "none" || computedStyles.visibility != "hidden") {
             var divClientRect = btns.buttons[d].getBoundingClientRect();
             if (divClientRect.x * divClientRect.y == 0){
                 btns.links[d].classList.add("hidden");
                 btns.labels[d].classList.add("hidden");
+                console.log(d);
             }
         } else {
+            console.log(d);            
             btns.links[d].classList.add("hidden");
             btns.labels[d].classList.add("hidden");
         }
         
+    }
+} */
+
+function showOnlyVisibleButtons(btns){ // allbuttons
+    for (var d = 0; d < btns.buttons.length; d++) {
+        var divClientRect = btns.buttons[d].getBoundingClientRect();
+        var computedStyles = window.getComputedStyle(btns.buttons[d]);
+        if (computedStyles.display == "none") {
+            btns.links[d].classList.add("hidden");
+            btns.labels[d].classList.add("hidden");
+        } else if (computedStyles.visibility == "hidden") {
+            btns.links[d].classList.add("hidden");
+            btns.labels[d].classList.add("hidden");
+        } else if (divClientRect.x * divClientRect.y == 0) {
+            btns.links[d].classList.add("hidden");
+            btns.labels[d].classList.add("hidden");
+        }
     }
 }
 
@@ -199,19 +218,24 @@ function listAttributes(attributes, listOfButtons, buttonType, buttons){
             }
         }
 
-        var html = "<button onclick=document.getElementById('" + buttonType + "Label" + b + "').scrollIntoView()>to the button</button>";
+        var html = "<button onclick=document.getElementById('" + buttonType + "Label" + b + "').scrollIntoView()>Show " + buttonTypeCap + " " + b + "</button>";
         document.querySelectorAll("[id^='" + buttonType + "Box" + b + "']")[0].appendChild(createNewElement("div", "linkTo" + buttonTypeCap + "ButtonLabel" + b, "link-to-button-label", html, ""));    
     } 
-    buttons.errors = errors;
+    buttons.errors = [];
+    buttons.errors.push(...errors); //buttons.errors = errors;
     
-    
-    buttons.links = document.querySelectorAll("[id^='linkTo" + buttonTypeCap + "']");
+    buttons.links = [];
+    buttons.links.push(...document.querySelectorAll("[id^='linkTo" + buttonTypeCap + "']")); //buttons.links = document.querySelectorAll("[id^='linkTo" + buttonTypeCap + "']");
 }
 
 function getDataLayer(){
     var dL = document.createElement("script");
     var hackScript = 
-    `var originalDl = window.dataLayer;
+    `function copyTextToClipboard(idOfBtn) {
+        navigator.clipboard.writeText(idOfBtn);
+    };
+
+    var originalDl = window.dataLayer;
     var dlParams = ['contentGroup', 'pageGroup', 'pageId', 'contentLocale'];
     var outputJSON = {};
     for (var m = 0; m < originalDl.length; m++) {
@@ -228,7 +252,7 @@ function getDataLayer(){
     hiddenDiv.style.visibility = 'hidden';
     hiddenDiv.textContent = JSON.stringify(outputJSON);
     hiddenDiv.id = 'dlHack';
-    document.body.appendChild(hiddenDiv);`
+    document.body.appendChild(hiddenDiv);`;
     var scriptDl = document.createTextNode(hackScript);
     dL.appendChild(scriptDl);
     document.body.appendChild(dL);
@@ -350,17 +374,39 @@ function closeAddon(){
 }
 
 function addCopyLink(){
+    
     Object.keys(allButtons).forEach(function(property){
         var box = allButtons[property].boxes;
         box.forEach(function(element, index){
             var copy = createNewElement("div", "copyTextParent", "copy-text", "", "Copy ID");
-            var xPath = '#' + property + 'Button' + index;
-            copy.setAttribute("onclick", "copyTextToClipboard('" + xPath + "')"); 
+            var idOfButton = '#' + property + 'Button' + index;
+            copy.setAttribute("onclick", "copyTextToClipboard('" + idOfButton + "')");
             element.insertBefore(copy, element.firstChild);
         })
         
     })
 }
+
+function activeButton(buttonId){
+    var ids = ["allButtons", "errorButtons", "allDownloadButtons", "allBuyButtons"];
+    document.getElementById(buttonId).firstChild.style.backgroundColor = "rgb(67, 178, 153)";
+    for (var g = 0; g < ids.length; g++) {
+        if (ids[g] != buttonId){
+            document.getElementById(ids[g]).firstChild.style.backgroundColor = "rgb(0, 133, 92)";
+        }
+        
+    }
+
+}
+
+function noActiveButton(){
+    var ids = ["allButtons", "errorButtons", "allDownloadButtons", "allBuyButtons"];
+    for (var g = 0; g < ids.length; g++) {
+        document.getElementById(ids[g]).firstChild.style.backgroundColor = "rgb(0, 133, 92)";
+    }    
+}
+
+
 
 (function createSidebar(){
     var downloadArray = [];
@@ -411,21 +457,31 @@ function addCopyLink(){
     listAttributes(downloadAttributes, allButtons.download.buttons, "download", allButtons.download);
     listAttributes(buyAttributes, allButtons.buy.buttons, "buy", allButtons.buy);
 
-    showOnlyVisibleButtons(allButtons.download);
-    showOnlyVisibleButtons(allButtons.buy);
-
     addBoxes(allButtons.download, "download");
     addBoxes(allButtons.buy, "buy");
 
-    document.getElementById("allButtons").addEventListener("click", showAll);    
+    showOnlyVisibleButtons(allButtons.download);
+    showOnlyVisibleButtons(allButtons.buy);
+
+    document.getElementById("allButtons").addEventListener("click", function(){ 
+        showAll();
+        activeButton("allButtons");
+    });   
     document.getElementById("errorButtons").addEventListener("click", function(){
         showAll();
+        activeButton("errorButtons");
         filterErrors(allButtons.download);
         filterErrors(allButtons.buy);
     });
 
-    document.getElementById("allDownloadButtons").addEventListener("click", function(){allDownloadsBuys(allButtons.buy)});
-    document.getElementById("allBuyButtons").addEventListener("click", function(){allDownloadsBuys(allButtons.download)});
+    document.getElementById("allDownloadButtons").addEventListener("click", function(){
+        activeButton("allDownloadButtons");
+        allDownloadsBuys(allButtons.buy);
+    });
+    document.getElementById("allBuyButtons").addEventListener("click", function(){
+        activeButton("allBuyButtons");
+        allDownloadsBuys(allButtons.download);
+    });
 
     addCross();
 
@@ -442,21 +498,21 @@ function updateButtons(btns){ // allbuttons
             }
         }
         for (var d = 0; d < btns.buttons.length; d++) {
+            var divClientRect = btns.buttons[d].getBoundingClientRect();
             var computedStyles = window.getComputedStyle(btns.buttons[d]);
-            if (computedStyles.display !== "none" || computedStyles.visibility !== "hidden") {
-                var divClientRect = btns.buttons[d].getBoundingClientRect();
-                if (divClientRect.x * divClientRect.y == 0){
-                    btns.links[d].classList.add("hidden");
-                }
-            } else {
+            if (computedStyles.display == "none") {
                 btns.links[d].classList.add("hidden");
-            }
-            
+            } else if (computedStyles.visibility == "hidden"){
+                btns.links[d].classList.add("hidden");
+            } else if (divClientRect.x * divClientRect.y == 0){
+                btns.links[d].classList.add("hidden");
+            }        
         }
     }
 
 window.addEventListener("hashchange", function(){
     showAll();
+    noActiveButton();
     updateButtons(allButtons.buy);
     updateButtons(allButtons.download);
     if (document.getElementById("visible-on-page").checked == true){
@@ -467,3 +523,9 @@ window.addEventListener("hashchange", function(){console.log(document.location)}
 
 
 // jak změnit labely při změně option v selectu?
+// dodělat když se změní select aby se to projevilo i v boxu
+// může se stát, že se na stránku přidá nový prvek
+
+
+
+
