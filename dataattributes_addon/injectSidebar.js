@@ -212,17 +212,32 @@ function hasErrors(button){
         if (attributes[attribute] === undefined) {
             if (attribute == "data-campaign") {
                 errors[i] = "ok";
-            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
-                errors[i] = "ok";
-            } 
-            else {
+            } else if (attribute == "data-quantity"){
+                if (attributes["data-product-category"] != undefined && attributes["data-product-category"] != ""){
+                    if (attributes["data-product-category"].match(/(C|c)onsumer/g)){
+                        errors[i] = "ok";
+                    } else {
+                        errors[i] = "error";
+                    }
+                } else {
+                    errors[i] = "error";
+                }
+            } else {
                 errors[i] = "error";
             }
         } else if (attributes[attribute] == "") { // rozdělit na dvě podmínky a podle toho jestli je undefined nebo prázdný přiřadit třídu a text v <i> potom vytvořit div se všemi <i>, případně eventou, která se posílá do GA a použít insertAfter() <H3> v boxu. možná poslat do funkce i index kvůli indexu boxu
             if (attribute == "data-campaign") {
                 errors[i] = "ok";
-            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
-                errors[i] = "ok";
+            } else if (attribute == "data-quantity"){
+                if (attributes["data-product-category"] != undefined && attributes["data-product-category"] != ""){
+                    if (attributes["data-product-category"].match(/(C|c)onsumer/g)){
+                        errors[i] = "ok";
+                    } else {
+                        errors[i] = "error";
+                    } 
+                } else {
+                    errors[i] = "error";
+                }
             } 
             else {
                 errors[i] = "error";
@@ -246,13 +261,22 @@ function fillBoxes(button){
     Object.keys(attributes).forEach(function(attribute, i){
         if (attributes[attribute] === undefined) {
             if (attribute == "data-campaign") {
-                classes[i] = "has-atribute-no-value";
-                texts[i] = "missing attribute (optional attribute)";
-            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
                 classes[i] = "has-attribute-no-value";
-                texts[i] = "mandatory for SMB (optional for Consumer)"; // Nešlo by nezobrazovat pro Consumer?
-            } 
-            else {
+                texts[i] = "missing attribute (optional attribute)";
+            } else if (attribute == "data-quantity"){ 
+                if (attributes["data-product-category"] != undefined && attributes["data-product-category"] != ""){
+                    if (attributes["data-product-category"].match(/(C|c)onsumer/g)){
+                        classes[i] = "has-attribute-no-value";
+                        texts[i] = "mandatory for SMB (optional for Consumer)"; // Nešlo by nezobrazovat pro Consumer?
+                    } else {
+                        classes[i] = "no-attribute";
+                        texts[i] = "missing attribute"; // Nešlo by nezobrazovat pro Consumer?
+                    }
+                } else {
+                    classes[i] = "no-attribute";
+                    texts[i] = "missing attribute";
+                }
+            } else {
                 classes[i] = "no-attribute";
                 texts[i] = "missing attribute";
             }
@@ -260,11 +284,20 @@ function fillBoxes(button){
             if (attribute == "data-campaign") {
                 classes[i] = "has-attribute-no-value";
                 texts[i] = "missing value (optional attribute)";
-            } else if (attribute == "data-quantity" && attributes["data-product-category"].match(/(C|c)onsumer/g)) {
-                classes[i] = "has-attribute-no-value";
-                texts[i] = "mandatory for SMB (optional for Consumer)";
-            } 
-            else {
+            } else if (attribute == "data-quantity"){ 
+                if (attributes["data-product-category"] != undefined && attributes["data-product-category"] != ""){
+                    if (attributes["data-product-category"].match(/(C|c)onsumer/g)){
+                        classes[i] = "has-attribute-no-value";
+                        texts[i] = "mandatory for SMB (optional for Consumer)"; // Nešlo by nezobrazovat pro Consumer?
+                    } else {
+                        classes[i] = "no-attribute";
+                        texts[i] = "missing attribute"; // Nešlo by nezobrazovat pro Consumer?
+                    }
+                } else {
+                    classes[i] = "has-attribute-no-value";
+                    texts[i] = "missing value";
+                }
+            } else {
                 classes[i] = "has-attribute-no-value";
                 texts[i] = "missing value";
             } 
