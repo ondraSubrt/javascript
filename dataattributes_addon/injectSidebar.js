@@ -325,7 +325,7 @@ function fillBoxes(button){
             boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["action"]));
             boxAttributes.appendChild(createNewElement("li", "", "has-attribute", "", gaEvent["label"]));
         } else {
-            var boxAttributes = createNewElement("div", "notSentToGA", "not-send-to-ga", "", "( ! ) wrong 'data-role' attribute value");
+            var boxAttributes = createNewElement("div", "notSentToGA", "not-send-to-ga", "", attributes["data-role"] + "( ! ) wrong 'data-role' attribute value");
         }// else if{************ sem doplnit podmínku pro dlaší typy tlačítek ********}
     } else {
         var boxAttributes = createNewElement("div", "notSentToGA", "not-send-to-ga", "", "( ! ) This event will not be sent to GA!");
