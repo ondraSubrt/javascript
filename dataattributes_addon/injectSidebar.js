@@ -1,5 +1,5 @@
 var allButtons = {};
-var nodeOfDownloadButtons = document.querySelectorAll("a[href*='download-thank-you.php'], a[href*='/download'], a[href*='play.google.com'], a[href*='apps.apple.com']");
+var nodeOfDownloadButtons = document.querySelectorAll("a[href*='download-thank-you.php'], a[href*='play.google.com'], a[href*='apps.apple.com']"); // a[href*='/download'], 
 var nodeOfBuyButtons =  document.querySelectorAll("a[href*='ipm.store.avast.com'], a[href*='store.avast.com'], a[href*='ipm.store-sl.avast.com'], a[href*='store-nw.avast.com'], a[href*='store-sl.avast.com'],	a[href*='ipm.store-ap.avast.com'], a[href*='store-cb.avast.com'], a[href*='ipm.store-cb.avast.com'], a[href*='shop.avg.com'], a[href*='checkout.hidemyass.com'], a[href*='/pricing']");
 var listOfDownloadButtons = Array.from(nodeOfDownloadButtons);
 var listOfBuyButtons = Array.from(nodeOfBuyButtons);
@@ -471,8 +471,9 @@ function closeAddon(allButtons){
         allButtons[type].forEach(function(buttons){
             buttons.button.label.remove(); 
             buttons.button.element.id = "";
-        })
+        })    
     })
+    document.body.style.width = "100%";
     document.getElementById("sidebarDivFirst").remove(); 
     allButtons = {};
 }
@@ -589,7 +590,7 @@ selects.forEach(function(select){
     select.addEventListener("change", function(){
         deleteAddonData(allButtons);
         allButtons = {};
-        var newBtns = document.querySelectorAll("a[href*='download-thank-you.php'],a[href*='/download'],a[href*='play.google.com'],a[href*='apps.apple.com'],a[href*='ipm.store.avast.com'],a[href*='store.avast.com'],a[href*='ipm.store-sl.avast.com'],a[href*='store-nw.avast.com'],a[href*='store-sl.avast.com'],a[href*='ipm.store-ap.avast.com'],a[href*='store-cb.avast.com'],a[href*='ipm.store-cb.avast.com'],a[href*='shop.avg.com'],a[href*='checkout.hidemyass.com'],a[href*='/pricing']")  //document.querySelectorAll("a[href*='download-thank-you.php']:not([id]),a[href*='/download']:not([id]),a[href*='play.google.com']:not([id]),a[href*='apps.apple.com']:not([id]),a[href*='ipm.store.avast.com']:not([id]),a[href*='store.avast.com']:not([id]),a[href*='ipm.store-sl.avast.com']:not([id]),a[href*='store-nw.avast.com']:not([id]),a[href*='store-sl.avast.com']:not([id]),a[href*='ipm.store-ap.avast.com']:not([id]),a[href*='store-cb.avast.com']:not([id]),a[href*='ipm.store-cb.avast.com']:not([id]),a[href*='shop.avg.com']:not([id]),a[href*='checkout.hidemyass.com']:not([id]),a[href*='/pricing']:not([id])");
+        var newBtns = document.querySelectorAll("a[href*='download-thank-you.php'],a[href*='play.google.com'],a[href*='apps.apple.com'],a[href*='ipm.store.avast.com'],a[href*='store.avast.com'],a[href*='ipm.store-sl.avast.com'],a[href*='store-nw.avast.com'],a[href*='store-sl.avast.com'],a[href*='ipm.store-ap.avast.com'],a[href*='store-cb.avast.com'],a[href*='ipm.store-cb.avast.com'],a[href*='shop.avg.com'],a[href*='checkout.hidemyass.com'],a[href*='/pricing']");
         getButtons(newBtns); 
         addAtributesToBox();
         showVisibleOnly();
