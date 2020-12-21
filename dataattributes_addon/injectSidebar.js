@@ -225,7 +225,7 @@ function hasErrors(button){
             } else {
                 errors[i] = "error";
             }
-        } else if (attributes[attribute] == "") { // rozdělit na dvě podmínky a podle toho jestli je undefined nebo prázdný přiřadit třídu a text v <i> potom vytvořit div se všemi <i>, případně eventou, která se posílá do GA a použít insertAfter() <H3> v boxu. možná poslat do funkce i index kvůli indexu boxu
+        } else if (attributes[attribute] == "") { 
             if (attribute == "data-campaign") {
                 errors[i] = "ok";
             } else if (attribute == "data-quantity"){
@@ -301,17 +301,20 @@ function fillBoxes(button){
                 classes[i] = "has-attribute-no-value";
                 texts[i] = "missing value";
             } 
-        } else {
+        } else if (attribute == "data-role") {
             if (attributes["data-role"] != "download-link" && buttonType(button) == "download"){
                 classes[i] = "no-attribute";
-                texts[i] = attributes["data-role"] + " wrong value 'download-link' expected";
+                texts[i] = attributes["data-role"] + " wrong value - 'download-link' expected";
             } else if (attributes["data-role"] != "cart-link" && buttonType(button) == "buy"){
                 classes[i] = "no-attribute";
-                texts[i] = attributes["data-role"] + " wrong value 'cart-link' expected";
+                texts[i] = attributes["data-role"] + " wrong value - 'cart-link' expected";
             } else {
                 classes[i] = "has-attribute";
                 texts[i] = attributes[attribute]; 
             }
+        } else {
+            classes[i] = "has-attribute";
+            texts[i] = attributes[attribute]; 
         }
 
         elements[i] = createNewElement("li", "", classes[i], "", attribute + " : " + texts[i]);
