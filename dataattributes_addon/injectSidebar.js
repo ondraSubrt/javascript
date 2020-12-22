@@ -60,8 +60,7 @@ function getDataLayer(){
     document.body.appendChild(dL);
     
     var dataLayerJSON = JSON.parse(document.querySelectorAll("#dlHack")[0].textContent);
-/*     console.log("this is a DL: ");  
-    console.log(dataLayerJSON); */
+
       
     var params = ["contentGroup", "pageGroup", "pageId", "contentLocale", "gaId"];
     var property = document.createElement("div");
@@ -107,7 +106,7 @@ function capitalLetter(word) {
 function createSidebar() {
     var sidebarWidth = window.innerWidth-600 + "px";
     document.body.style.width = sidebarWidth;
-    var new_div = createNewElement("div", "sidebarDivFirst","sidebar","","");
+    var new_div = createNewElement("div", "sidebarDivFirst","addon-sidebar","","");
     // create div which will have all body inside andd then create another one for sidebar
     
     if (document.querySelectorAll(".sticky-bar").length > 0){    
@@ -539,7 +538,7 @@ function toggleVisibleBoxes(){
 }
 
 function filterButtons(){
-    var filters = document.getElementsByName("filter-buttons");
+    var filters = Array.from(document.getElementsByClassName("filter-buttons"));
     filters.forEach(function(filter){
         if (filter.checked){
             if (filter.id == "allButtons") {

@@ -1,4 +1,12 @@
-.sidebar {
+/* @font-face {
+    font-family: 'proxima-nova', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    src: url("fonts/proximanova-regular-webfont.woff2") format("woff2");
+} */
+
+.addon-sidebar {
+    font-size: 14px;
     top: 0;
     right: 0;    
     position: fixed;
@@ -185,6 +193,7 @@ input[type=radio] + label {
     width: 100%;
     color: white;
     cursor: pointer;
+    display: inline-block;
 } 
 input[type=radio]:checked + label {
     background-color: rgb(67, 178, 153);
@@ -194,6 +203,7 @@ input[type=radio]:checked + label {
     width: 100%;
     color: white;
     cursor: pointer;
+    display: inline-block;
 }
 
   .hidden {
